@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:smooth_stone_slab"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "id": "cobblemon_player_shops:player_shop",
+    "count": 1
+  }
+}

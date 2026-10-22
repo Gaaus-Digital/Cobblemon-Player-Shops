@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------------------
+# Built / published mod jars
+# ---------------------------------------------------------------------------
+# Ignore every jar (remapped, -sources, -dev, published releases, etc.) ...
+*.jar
+# ... except the Gradle wrapper, which must stay in the repo.
+!gradle/wrapper/gradle-wrapper.jar
+
+# ---------------------------------------------------------------------------
+# Gradle / Fabric Loom
+# ---------------------------------------------------------------------------
+.gradle/
+build/
+out/
+classes/
+bin/
+run/
+runs/
+remappedSrc/
+.dist/
+dist/
+
+# ---------------------------------------------------------------------------
+# Third-party mod jars used for dev (Cobblemon, CobbleDollars)
+# Redistributing these is not ours to do; they are fetched/placed locally.
+# ---------------------------------------------------------------------------
+libs/
+
+# ---------------------------------------------------------------------------
+# Test / debug output
+# ---------------------------------------------------------------------------
+logs/
+*.log
+hs_err_pid*.log
+replay_pid*.log
+crash-reports/
+*.hprof
+*.jfr
+client-output.txt
+gametest-output.txt
+
+# ---------------------------------------------------------------------------
+# IDEs
+# ---------------------------------------------------------------------------
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+*.launch
+
+# VS Code
+.vscode/
+
+# ---------------------------------------------------------------------------
+# Tooling / local-only
+# ---------------------------------------------------------------------------
+.modrinth/
+*.local
+local.properties
+# Tests are kept locally only (not published)
+src/test/
+src/gametest/
+
+# ---------------------------------------------------------------------------
+# OS files
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "cobblemon_player_shops",
+	"version": "${version}",
+	"name": "Cobblemon: Player Shops",
+	"description": "Player-run and admin shops that sell items for CobbleDollars.",
+	"authors": [
+		"Gaaus"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/cobblemon-player-shops",
+		"sources": "https://github.com/Gaaus-Digital/Cobblemon-Player-Shops",
+		"issues": "https://github.com/Gaaus-Digital/Cobblemon-Player-Shops/issues"
+	},
+	"license": "All-Rights-Reserved",
+	"icon": "assets/cobblemon_player_shops/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.gaaus.cobblemonplayershops.CobblemonPlayerShops"
+		],
+		"client": [
+			"dev.gaaus.cobblemonplayershops.client.CobblemonPlayerShopsClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.16.5",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"cobbledollars": ">=2.0.0",
+		"cobblemon": ">=1.7.0",
+		"fabric-language-kotlin": "*"
+	}
+}

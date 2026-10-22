@@ -1,0 +1,133 @@
+plugins {
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	// No Kotlin sources in this mod. The plugin is applied only so Loom remaps the Kotlin metadata inside
+	// Cobblemon/CobbleDollars; without it kotlin-reflect sees intermediary names in dev and Cobblemon crashes.
+	id 'org.jetbrains.kotlin.jvm' version "${kotlin_plugin_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	mavenCentral()
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"cobblemon_player_shops" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+fabricApi {
+	// Headless server GameTests (./gradlew runGametest): exercise buy/withdraw/removal/trust logic on real objects.
+	configureTests {
+		createSourceSet = true
+		modId = "cobblemon_player_shops_gametest"
+		eula = false
+		clearRunDirectory = true
+	}
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// CobbleDollars: compile against it, run it in dev. Only economy/CobbleDollarsEconomy and
+	// economy/MoneyFormat may reference fr.harmex.* classes.
+	modCompileOnly files(project.cobbledollars_jar)
+	modLocalRuntime files(project.cobbledollars_jar)
+
+	// Cobblemon is needed so Loom can remap CobbleDollars cleanly, and at runtime because CobbleDollars depends on it.
+	modCompileOnly files(project.cobblemon_jar)
+	modLocalRuntime files(project.cobblemon_jar)
+	modLocalRuntime "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+
+	// Dev-only: Cobblemon's Showdown needs GraalVM, which its jar-in-jar doesn't provide when loaded from libs/.
+	localRuntime "org.graalvm.js:js:22.3.0"
+	localRuntime "org.graalvm.sdk:graal-sdk:22.3.0"
+	localRuntime "org.graalvm.regex:regex:22.3.0"
+	localRuntime "org.graalvm.truffle:truffle-api:22.3.0"
+	localRuntime "com.ibm.icu:icu4j:71.1"
+
+	// LuckPerms-style permission nodes, falling back to op levels. Shipped jar-in-jar.
+	// Non-transitive: its POM imports the Fabric API 1.21.3 BOM, which would drag 1.21.3 modules onto our classpath.
+	modImplementation("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}") { transitive = false }
+	include("me.lucko:fabric-permissions-api:${project.fabric_permissions_api_version}")
+
+	testImplementation "org.junit.jupiter:junit-jupiter:${project.junit_version}"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": inputs.properties.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+test {
+	useJUnitPlatform()
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+
+	from("LICENSE") {
+		rename { "${it}_${inputs.properties.archivesName}"}
+	}
+
+	from("LICENSE_numismatic-overhaul")
+}
+
+// The gametest run config does not inherit localRuntime, and Loom drops Minecraft's own icu4j from server
+// classpaths. Cobblemon's Showdown thread needs both GraalVM and ICU or the server start blocks forever.
+// ICU is taken from the copy bundled inside the Cobblemon jar.
+tasks.register("extractBundledIcu", Copy) {
+	from(zipTree(file(project.cobblemon_jar))) {
+		include "META-INF/jars/icu4j-*.jar"
+		eachFile { it.path = it.name }
+		includeEmptyDirs = false
+	}
+	into layout.buildDirectory.dir("dev-libs")
+}
+
+afterEvaluate {
+	dependencies {
+		gametestRuntimeOnly "org.graalvm.js:js:22.3.0"
+		gametestRuntimeOnly "org.graalvm.sdk:graal-sdk:22.3.0"
+		gametestRuntimeOnly "org.graalvm.regex:regex:22.3.0"
+		gametestRuntimeOnly "org.graalvm.truffle:truffle-api:22.3.0"
+		gametestRuntimeOnly fileTree(layout.buildDirectory.dir("dev-libs")) { builtBy "extractBundledIcu" }
+	}
+}

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=south": { "model": "cobblemon_player_shops:block/player_shop" },
+    "facing=west":  { "model": "cobblemon_player_shops:block/player_shop", "y": 90 },
+    "facing=north": { "model": "cobblemon_player_shops:block/player_shop", "y": 180 },
+    "facing=east":  { "model": "cobblemon_player_shops:block/player_shop", "y": 270 }
+  }
+}
