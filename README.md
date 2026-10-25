@@ -76,13 +76,11 @@ Give yourself an Admin Shop:
 
 ## Crafting
 
-The Player Shop is a shaped recipe. Planks can be any planks.
+The Player Shop is crafted using the following recipe. Planks can be any type of planks.
 
-```text
-Smooth Stone Slab | Smooth Stone Slab | Smooth Stone Slab
-Planks            | Chest             | Planks
-Planks            | Planks            | Planks
-```
+<p align="center">
+  <img src="https://cdn.modrinth.com/data/cached_images/8f1e5f07cd8f7b0f78678af6298b471273e2cbe3.png" alt="Player Shop Crafting Recipe">
+</p>
 
 ---
 
