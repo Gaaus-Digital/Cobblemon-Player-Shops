@@ -21,8 +21,10 @@ remappedSrc/
 dist/
 
 # ---------------------------------------------------------------------------
-# Third-party mod jars used for dev (Cobblemon, CobbleDollars)
-# Redistributing these is not ours to do; they are fetched/placed locally.
+# Third-party mod JARs used for development (e.g., Cobblemon, CobbleDollars)
+# CPS does not redistribute these JAR files. Links to the original mods are
+# provided in README.md. If you're interested in the original mods, check out
+# their respective Modrinth or GitHub pages.
 # ---------------------------------------------------------------------------
 libs/
 
